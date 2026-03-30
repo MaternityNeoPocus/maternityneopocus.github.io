@@ -1,8 +1,0 @@
-1.name
-2.fileno.
-3.gestational age
-4,siteofbaby
-5.indicationofecho
-6.findings
-7.notes
-9.dateofecho
