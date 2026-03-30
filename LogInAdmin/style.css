@@ -1,0 +1,84 @@
+body{
+    font-family: Arial, sans-serif;
+    background-color: #EEEEEE;
+    margin: 0;
+    padding: 0;
+}
+header{
+    background-color: #006B64;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    justify-content:space-between;
+} 
+.home{
+    background-color: #31DBD9;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.home:hover{
+    background-color: #31DBD9;
+    transition: ease-in-out 0.4s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)    ;
+    transition: ease-out 0.4s;
+}
+.lit{
+    text-decoration: none;
+    color: #31DBD9;
+    font-weight: bold;
+}
+.unl{
+    color: #31DBD9;
+    font-weight: bold;
+}
+.uni{
+    border: 1px solid #31DBD9;
+    padding: 5px;
+}
+.psl{
+    color: #31DBD9;
+    font-weight: bold;
+}
+.psi{
+    border: 1px solid #31DBD9;
+    padding: 5px;
+}
+.lib{
+    background-color: #31DBD9;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+}
+form{
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    width: 300px;
+    justify-self: center;
+    margin-top: 150px;
+}
+input[type="email"], input[type="password"]{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+input[type="submit"]{
+    width: 100%;
+    background-color: #31DBD9;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+input[type="submit"]:hover{
+    background-color: #006B64;
+    transition: ease-in-out 0.3s;
+}
