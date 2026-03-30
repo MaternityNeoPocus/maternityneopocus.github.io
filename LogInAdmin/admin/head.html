@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+<title>Doctors & Babies</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    padding: 20px;
+  }
+
+  .doctor-card {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.15);
+  }
+
+  .doctor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+  }
+
+  .doctor-name {
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  .count {
+    font-size: 14px;
+    color: #555;
+  }
+
+  .toggle-btn {
+    background: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .baby-list {
+    display: none;
+  }
+
+  .baby-card {
+    background: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-left: 5px solid #4caf50;
+    border-radius: 5px;
+  }
+
+  button {
+    margin-top: 8px;
+    margin-right: 8px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .edit-btn { background: #2196f3; color: white; }
+  .delete-btn { background: #f44336; color: white; }
+  .save-btn { background: #4caf50; color: white; }
+  .cancel-btn { background: #777; color: white; }
+
+  .edit-form input,
+  .edit-form textarea {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 8px;
+  }
+
+  .baby-card p {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 600px) {
+    .doctor-name { font-size: 16px; }
+    .count { font-size: 10px; }
+    .baby-card p { font-size: 12px; }
+  }
+</style>
+</head>
+
+<body>
+
+
+<a class="home" href="../../index.html">Return Back</a>
+<h2>👨‍⚕️ Doctors & Babies Records</h2>
+<div class="toggle-us">
+  <a class="toggle-US" href="admin.html">Lung Ultrasound</a>
+  <a class="toggle-US" href="abdomenal.html">Abdominal Ultrasound</a>
+  <a class="toggle-US" href="vascular.html">Vascular Access Ultrasound</a>
+  <a class="toggle-US" id="disabled">Head Ultrasound</a>
+</div>
+<style>
+  .toggle-us {
+    margin-bottom: 20px;
+  }
+
+  .toggle-us a {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  #disabled {
+    background: #ccc;
+  }
+</style>
+<div>
+  <div id="content"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+/* 🔹 FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyDS-XsKfidJCj_hjcpINeUbiQE6l5dKAHA",
+  authDomain: "my-videocalling-app-7e009.firebaseapp.com",
+  databaseURL: "https://my-videocalling-app-7e009-default-rtdb.firebaseio.com",
+  projectId: "my-videocalling-app-7e009",
+  storageBucket: "my-videocalling-app-7e009.firebasestorage.app",
+  messagingSenderId: "1011065279306",
+  appId: "1:1011065279306:web:c811a690cb036f041be7b3",
+  measurementId: "G-NS86WN0V75"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const contentDiv = document.getElementById("content");
+
+/* 🔹 KEEP TRACK OF OPEN DOCTORS */
+const openDoctors = new Set();
+
+onValue(ref(db, "Doctors"), (snapshot) => {
+  contentDiv.innerHTML = "";
+
+  snapshot.forEach((doctorSnap) => {
+    const doctorName = doctorSnap.key;
+    const babies = doctorSnap.val().Babies;
+    if (!babies) return;
+
+    const doctorCard = document.createElement("div");
+    doctorCard.className = "doctor-card";
+
+    const babyCount = Object.keys(babies).length;
+
+    doctorCard.innerHTML = `
+      <div class="doctor-header">
+        <div class="doctor-name">
+          Dr. ${doctorName}
+          <span class="count">(${babyCount} babies)</span>
+        </div>
+        <button type="button" class="toggle-btn">+</button>
+      </div>
+      <div class="baby-list"></div>
+    `;
+
+    const babyList = doctorCard.querySelector(".baby-list");
+    const toggleBtn = doctorCard.querySelector(".toggle-btn");
+
+    /* 🔽 Toggle expand/minimize */
+    toggleBtn.onclick = () => {
+      const open = babyList.style.display === "block";
+      if (open) {
+        babyList.style.display = "none";
+        toggleBtn.textContent = "+";
+        openDoctors.delete(doctorName);
+      } else {
+        babyList.style.display = "block";
+        toggleBtn.textContent = "−";
+        openDoctors.add(doctorName);
+      }
+    };
+
+    /* 🔁 Restore open state */
+    if (openDoctors.has(doctorName)) {
+      babyList.style.display = "block";
+      toggleBtn.textContent = "−";
+    }
+
+    Object.entries(babies).forEach(([babyId, baby]) => {
+      const babyDiv = document.createElement("div");
+      babyDiv.className = "baby-card";
+
+      babyDiv.innerHTML = `
+        <div class="display">
+          <p><strong>Name:</strong> ${baby.name}</p>
+          <p><strong>File Number:</strong> ${baby.fileNumberId}</p>
+          <p><strong>Gestational Age:</strong> ${baby.gestationalAge}</p>
+          <p><strong>Site of Baby:</strong> ${baby.siteOfBaby}</p>
+          <p style="white-space: pre-wrap;word-wrap: break-word;"><strong>Indication:</strong> ${baby.indicationOfscan}</p>
+          <p><strong  style="white-space: pre-wrap;word-wrap: break-word;">Findings:</strong> ${baby.findings}</p>
+          <p><strong style="white-space: pre-wrap;word-wrap: break-word;">Notes:</strong> ${baby.notes}</p>
+          <p><strong>Date of scan:</strong> ${baby.dateOfscan}</p>
+          <p><strong>Time Registered:</strong> ${baby.createdAt}</p>
+
+          <button type="button" class="edit-btn">✏️ Edit</button>
+          <button type="button" class="delete-btn">🗑 Delete</button>
+        </div>
+
+        <div class="edit-form" style="display:none;">
+          <input value="${baby.name}">
+          <input value="${baby.fileNumberId}">
+          <input value="${baby.gestationalAge}">
+          <input value="${baby.siteOfBaby}">
+          <input value="${baby.indicationOfEcho}">
+          <input value="${baby.findings}">
+          <textarea>${baby.notes}</textarea>
+          <input value="${baby.dateOfEcho}">
+
+          <button type="button" class="save-btn">💾 Save</button>
+          <button type="button" class="cancel-btn">Cancel</button>
+        </div>
+      `;
+
+      const display = babyDiv.querySelector(".display");
+      const form = babyDiv.querySelector(".edit-form");
+
+      babyDiv.querySelector(".edit-btn").onclick = () => {
+        display.style.display = "none";
+        form.style.display = "block";
+      };
+
+      babyDiv.querySelector(".cancel-btn").onclick = () => {
+        form.style.display = "none";
+        display.style.display = "block";
+      };
+
+      babyDiv.querySelector(".save-btn").onclick = () => {
+        const i = form.querySelectorAll("input, textarea");
+
+        update(ref(db, `Doctors/${doctorName}/Babies/${babyId}`), {
+          name: i[0].value,
+          fileNumberId: i[1].value,
+          gestationalAge: i[2].value,
+          siteOfBaby: i[3].value,
+          indicationOfEcho: i[4].value,
+          findings: i[5].value,
+          notes: i[6].value,
+          dateOfEcho: i[7].value
+        });
+      };
+
+      babyDiv.querySelector(".delete-btn").onclick = () => {
+        if (confirm("Delete this record?")) {
+          remove(ref(db, `Doctors/${doctorName}/Babies/${babyId}`));
+        }
+      };
+
+      babyList.appendChild(babyDiv);
+    });
+
+    contentDiv.appendChild(doctorCard);
+  });
+});
+</script>
+
+</body>
+</html>

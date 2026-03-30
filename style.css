@@ -1,0 +1,392 @@
+
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    transition: all 0.5s ease;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    background-color: #EEEEEE;
+    margin: 0;
+    padding-top: 90px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+header {
+    background-color: #006B64;
+    color: white;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--glass-border);
+
+    padding: 0 5%;
+    height: 72px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    position: fixed;
+    top: 0;
+    width: 100%;
+
+    box-shadow: var(--shadow-soft);
+    z-index: 1000;
+
+}
+
+.admin-signup{
+    background-color: #31DBD9;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.admin-signup:hover{
+    background-color: #0d9b99;
+    transition: ease-in-out 0.4s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)    ;
+    transition: ease-out 0.4s;
+}
+.choose_pocus{
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    margin-bottom: 150px;
+}
+/*----Lung UltraSound----*/
+.lungus{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+    margin-right: 20px;
+}
+.lungus a{
+    text-decoration: none;
+    color: #31DBD9;
+    font-weight: bold;
+    text-align: center;
+}
+.lungus:hover{
+    color: #31DBD9;
+    transition: ease-in-out 0.4s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)    ;
+    transition: ease-out 0.4s;
+}
+/*----Abdomenal UltraSound----*/
+.abdomenalus{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+    margin-right: 20px;
+}
+.abdomenalus a{
+    text-decoration: none;
+    color: #31DBD9;
+    font-weight: bold;
+    text-align: center;
+}
+.abdomenalus:hover{
+    color: #31DBD9;
+    transition: ease-in-out 0.4s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)    ;
+    transition: ease-out 0.4s;
+}
+/*----Head UltraSound----*/
+.headus{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+    margin-right: 20px;
+}
+.headus a{
+    text-decoration: none;
+    color: #31DBD9;
+    font-weight: bold;
+    text-align: center;
+}
+.headus:hover{
+    color: #31DBD9;
+    transition: ease-in-out 0.4s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)    ;
+    transition: ease-out 0.4s;
+}
+/*----Vascular Access UltraSound----*/
+.vascularus{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+    margin-right: 20px;
+}
+.vascularus a{
+    text-decoration: none;
+    color: #31DBD9;
+    font-weight: bold;
+    text-align: center;
+}
+.vascularus:hover{
+    color: #31DBD9;
+    transition: ease-in-out 0.4s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)    ;
+    transition: ease-out 0.4s;
+}
+
+
+form{
+    background: #EEEEEE;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    width: 600px;
+    justify-self: center;
+    margin: 100px auto;
+    margin-top: 100px;
+}
+
+.lit{
+    text-align: center;
+    color: #31DBD9;
+    font-weight: bold;
+}
+.l{
+    text-align: center;
+    text-decoration: none;
+    color: #31DBD9;
+    font-weight: bold;
+    margin-top: 1px;
+}
+
+.dateOfEcho , .notes ,.findings , .indicationOfEcho, .siteOfBaby, .gestational, .fileNumberId, .babyname, .doctor{
+     border: 1px solid #31DBD9;
+    padding: 5px;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="text"]:hover{
+    border-color: #31DBD9;
+    transition: ease-in-out 0.3s;
+}
+input{
+    border-radius: 5px;
+}
+input[type="button"]{
+    width: 100%;
+    background-color: #31DBD9;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+input[type="button"]:hover{
+    background-color: #31DBD9;
+    transition: ease-in-out 0.3s;
+}
+
+.notes ,.findings{
+    height: 100px;  
+    resize: none;
+}
+
+
+
+footer a{
+    text-decoration: none;
+    color: #2E2E29;  
+}
+footer a:hover{
+    color: #2E2E29;
+    font-size: 18px;
+    transition: ease-out 0.4s;
+}
+footer{
+    text-align: center;
+    padding: 20px 0;
+    background-color: #46C4BC;
+    color: #EEEEEE;
+    margin-top: 50px;
+}
+
+#loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ddd;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width:900px) {
+    header h1{
+        font-size: 20px;
+    }
+    
+}
+@media (max-width:800px) {
+    header h1{
+        font-size: 30px;
+    }
+    .admin-signup{
+        font-size: 12px;
+        padding: 8px;
+    }
+    .lit{
+        font-size: 14px;
+    }
+    
+    #form{
+        width: 90%;
+        padding: 20px;
+        margin: 50px auto;
+        font-size: 10px;
+    }
+    .lib{
+        font-size: 10px;
+    }
+    footer{
+        font-size: 12px;
+    }
+
+}
+
+@media (max-width:700px) {
+    header h1{
+        font-size: 20px;
+    }
+    
+}
+@media (max-width:600px) {
+    header h1{
+        font-size: 20px;
+    }
+    .choose_pocus{
+        flex-direction: column;
+        padding: 0px;
+    }
+    .abdomenalus, .headus, .lungus, .vascularus{
+        margin-left: 33%;
+    }
+    
+}
+@media (max-width:420px) {
+    header h1{
+        font-size: 17px;
+    }
+    header .admin-signup{
+        font-size: 10px;
+        padding: 6px;
+
+    }
+    header{
+        padding-right: 8px 0;
+    }
+    .lit{
+        font-size: 10px;
+    }
+    #form{
+        width: 80%;
+        padding: 15px;
+        margin: 30px auto;
+    }
+    .lib{
+        font-size: 8px;
+    }
+    #form input {
+        font-size: 10px;
+        width: 80%;
+    }
+    #form .findings{
+        width : 85%;
+    }
+    #form .notes{
+        width : 85%;
+    }
+    
+    
+    #form .siteOfBaby{
+        width : 86%;
+    }
+    footer{
+        font-size: 12px;
+    }
+}
+
+@media (max-width:200px) {
+    header h1{
+        font-size: 17px;
+    }
+    header .admin-signup{
+        font-size: 8px;
+        padding: 4px;
+
+    }
+    header{
+        padding-right: 6px 0;
+    }
+    .lit{
+        font-size: 8px;
+    }
+    #form{
+        width: 70%;
+        padding: 10px;
+        margin: 20px auto;
+        font-size: 6px;
+    }
+    .lib{
+        font-size: 6px;
+    }
+    #form input, .siteOfBaby {
+        font-size: 6px;
+        width: 70%;
+    }
+    #form .findings{
+        width : 75%;
+        height: 40%;
+    }
+    #form .notes{
+        width : 75%;
+        height: 40%;
+    }
+    #form .lib{
+        font-size: 6px;
+        width: 86%;
+    }
+    footer{
+        font-size: 8px;
+    }
+}
