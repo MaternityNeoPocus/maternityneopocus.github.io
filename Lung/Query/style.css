@@ -1,0 +1,182 @@
+body{
+    font-family: Arial, sans-serif;
+    background-color: #EEEEEE;
+    margin: 0;
+    padding: 0;
+}
+header{
+    background-color: #006B64;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    align-content: space-around;
+} 
+.home{
+    background-color: #409a99;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: ease-out 0.4s;
+}
+.home:hover{
+    background-color: #006B64;
+    transition: ease-in-out 0.4s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)    ;
+}
+h2 {
+  text-align: center;
+  color: #006B64;
+}
+
+input, button {
+  padding: 10px;
+  font-size: 16px;
+}
+input {
+  width: 400px;
+  margin-right: 10px;
+  border: 0.1px solid #006B64;
+  border-radius: 10px;
+  transform: ease-in-out 0.4s;
+}
+input:focus{
+    outline: none;
+    border-color: #31DBD9;
+    box-shadow: 0 0 5px rgba(49, 219, 217, 0.5);
+}
+button {
+  background-color: #006B64;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: ease-out 0.4s;
+}
+button:hover {
+  background-color: #31DBD9;
+  transition: ease-in-out 0.4s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-top: 10px;
+
+}
+
+.Inquiry{
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    width: 600px;
+    justify-self: center;
+    justify-content: center;
+    justify-items: center;
+    margin: 100px auto;
+    margin-top: 150px;
+}
+
+footer a{
+    text-decoration: none;
+    color: #006B64;  
+}
+footer a:hover{
+    color: #2E2E29;
+    font-size: 18px;
+    transition: ease-out 0.4s;
+}
+footer{
+    text-align: center;
+    padding: 20px 0;
+    background-color: #46C4BC;
+    color: #EEEEEE;
+    margin-top: 200px;
+}
+
+@media (max-width:750px) {
+  header{
+    font-size: 10px
+  }
+  h2{
+    font-size: 18px;
+  }
+  .Inquiry{
+    width: 80%;
+  }
+  input{
+    width: 70%;
+  }
+}
+
+@media (max-width:600px) {
+  header{
+    font-size: 10px
+  }
+  h2{
+    font-size: 18px;
+  }
+  .Inquiry{
+    width: 70%;
+  }
+  input{
+    width: 60%;
+  }
+  .card{
+    font-size: 10px;
+  }
+}
+
+@media (max-width:400px) {
+  header{
+    font-size: 10px
+  }
+  h2{
+    font-size: 13px;
+  }
+  .Inquiry{
+    width: 60%;
+  }
+  input{
+    width: 50%;
+    font-size:10px;
+  }
+  button{
+    font-size: 10px;
+  }
+  footer{
+    font-size: 15px;
+  }
+}
+
+@media (max-width:400px) {
+  header{
+    font-size: 7px
+  }
+  h2{
+    font-size: 13px;
+  }
+  .Inquiry{
+    margin-top: 60px;
+    width: 60%;
+  }
+  input{
+    width: 50%;
+    font-size:10px;
+  }
+  button{
+    font-size: 10px;
+  }
+  footer{
+    font-size: 10px;
+  }
+  .card{
+    font-size: 7px;
+  }
+}
