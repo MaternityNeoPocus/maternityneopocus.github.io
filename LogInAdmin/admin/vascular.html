@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+<title>Doctors & Babies</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    padding: 20px;
+  }
+
+  .doctor-card {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.15);
+  }
+
+  .doctor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+  }
+
+  .doctor-name {
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  .count {
+    font-size: 14px;
+    color: #555;
+  }
+
+  .toggle-btn {
+    background: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .baby-list {
+    display: none;
+  }
+
+  .baby-card {
+    background: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-left: 5px solid #4caf50;
+    border-radius: 5px;
+  }
+
+  button {
+    margin-top: 8px;
+    margin-right: 8px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .edit-btn { background: #2196f3; color: white; }
+  .delete-btn { background: #f44336; color: white; }
+  .save-btn { background: #4caf50; color: white; }
+  .cancel-btn { background: #777; color: white; }
+
+  .edit-form input,
+  .edit-form textarea {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 8px;
+  }
+
+  .baby-card p {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 600px) {
+    .doctor-name { font-size: 16px; }
+    .count { font-size: 10px; }
+    .baby-card p { font-size: 12px; }
+  }
+</style>
+</head>
+
+<body>
+
+
+<a class="home" href="../../index.html">Return Back</a>
+<h2>👨‍⚕️ Doctors & Babies Records</h2>
+<div class="toggle-us" id="toggle-us">
+  <button id="save-pdf-btn" style="background: #2e7d32; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+    💾 Save Full PDF Report
+  </button>
+  <a class="toggle-US" href="admin.html">Lung Ultrasound</a>
+  <a class="toggle-US" href="abdomenal.html">Abdominal Ultrasound</a>
+  <a class="toggle-US" id="disabled">Vascular Access Ultrasound</a>
+  <a class="toggle-US" href="head.html">Head Ultrasound</a>
+</div>
+<style>
+  .toggle-us {
+    margin-bottom: 20px;
+  }
+
+  .toggle-us a {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  #disabled {
+    background: #ccc;
+  }
+   @media (max-width:900px) {
+    #toggle-us{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 40px;
+    }
+  }
+  .doctor-card, .baby-card {
+    page-break-inside: avoid; /* Essential for clean multi-page reports */
+    break-inside: avoid;
+}
+
+#content {
+    background: #ffffff !important;
+    padding: 10px;
+}
+</style>
+<div>
+  <div id="content"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+/* 🔹 FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyC1PrSk6ANrnPgTIDAd8TVStHQ7IWwS0Hs",
+  authDomain: "my-videocalling-app-cd593.firebaseapp.com",
+  databaseURL: "https://my-videocalling-app-cd593-default-rtdb.firebaseio.com",
+  projectId: "my-videocalling-app-cd593",
+  storageBucket: "my-videocalling-app-cd593.firebasestorage.app",
+  messagingSenderId: "883990918776",
+  appId: "1:883990918776:web:9a7b9f543c551bfb179f8d",
+  measurementId: "G-9WTXJ1TJRP"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const contentDiv = document.getElementById("content");
+
+/* 🔹 KEEP TRACK OF OPEN DOCTORS */
+const openDoctors = new Set();
+
+onValue(ref(db, "Doctors"), (snapshot) => {
+  contentDiv.innerHTML = "";
+
+  snapshot.forEach((doctorSnap) => {
+    const doctorName = doctorSnap.key;
+    const babies = doctorSnap.val().Babies;
+    if (!babies) return;
+
+    const doctorCard = document.createElement("div");
+    doctorCard.className = "doctor-card";
+
+    const babyCount = Object.keys(babies).length;
+
+    doctorCard.innerHTML = `
+      <div class="doctor-header">
+        <div class="doctor-name">
+          Dr. ${doctorName}
+          <span class="count">(${babyCount} babies)</span>
+        </div>
+        <button type="button" class="toggle-btn">+</button>
+      </div>
+      <div class="baby-list"></div>
+    `;
+
+    const babyList = doctorCard.querySelector(".baby-list");
+    const toggleBtn = doctorCard.querySelector(".toggle-btn");
+
+    /* 🔽 Toggle expand/minimize */
+    toggleBtn.onclick = () => {
+      const open = babyList.style.display === "block";
+      if (open) {
+        babyList.style.display = "none";
+        toggleBtn.textContent = "+";
+        openDoctors.delete(doctorName);
+      } else {
+        babyList.style.display = "block";
+        toggleBtn.textContent = "−";
+        openDoctors.add(doctorName);
+      }
+    };
+
+    /* 🔁 Restore open state */
+    if (openDoctors.has(doctorName)) {
+      babyList.style.display = "block";
+      toggleBtn.textContent = "−";
+    }
+
+    Object.entries(babies).forEach(([babyId, baby]) => {
+      const babyDiv = document.createElement("div");
+      babyDiv.className = "baby-card";
+
+      babyDiv.innerHTML = `
+        <div class="display">
+          <p><strong>Name:</strong> ${baby.name}</p>
+          <p><strong>File Number:</strong> ${baby.fileNumberId}</p>
+          <p><strong>Gestational Age:</strong> ${baby.gestationalAge}</p>
+          <p><strong>Site of Baby:</strong> ${baby.siteOfBaby}</p>
+          <p style="white-space: pre-wrap;word-wrap: break-word;"><strong>Indication:</strong> ${baby.indicationOfscan}</p>
+          <p><strong  style="white-space: pre-wrap;word-wrap: break-word;">Findings:</strong> ${baby.findings}</p>
+          <p><strong style="white-space: pre-wrap;word-wrap: break-word;">Notes:</strong> ${baby.notes}</p>
+          <p><strong>Date of scan:</strong> ${baby.dateOfscan}</p>
+          <p><strong>Time Registered:</strong> ${baby.createdAt}</p>
+
+          <button type="button" class="edit-btn">✏️ Edit</button>
+          <button type="button" class="delete-btn">🗑 Delete</button>
+        </div>
+
+        <div class="edit-form" style="display:none;">
+          <input value="${baby.name}">
+          <input value="${baby.fileNumberId}">
+          <input value="${baby.gestationalAge}">
+          <input value="${baby.siteOfBaby}">
+          <input value="${baby.indicationOfscan}">
+          <input value="${baby.findings}">
+          <textarea>${baby.notes}</textarea>
+          <input value="${baby.dateOfscan}">
+
+          <button type="button" class="save-btn">💾 Save</button>
+          <button type="button" class="cancel-btn">Cancel</button>
+        </div>
+      `;
+
+      const display = babyDiv.querySelector(".display");
+      const form = babyDiv.querySelector(".edit-form");
+
+      babyDiv.querySelector(".edit-btn").onclick = () => {
+        display.style.display = "none";
+        form.style.display = "block";
+      };
+
+      babyDiv.querySelector(".cancel-btn").onclick = () => {
+        form.style.display = "none";
+        display.style.display = "block";
+      };
+
+      babyDiv.querySelector(".save-btn").onclick = () => {
+        const i = form.querySelectorAll("input, textarea");
+
+        update(ref(db, `Doctors/${doctorName}/Babies/${babyId}`), {
+          name: i[0].value,
+          fileNumberId: i[1].value,
+          gestationalAge: i[2].value,
+          siteOfBaby: i[3].value,
+          indicationOfscan: i[4].value,
+          findings: i[5].value,
+          notes: i[6].value,
+          dateOfscan: i[7].value
+        });
+      };
+
+      babyDiv.querySelector(".delete-btn").onclick = () => {
+        if (confirm("Delete this record?")) {
+          remove(ref(db, `Doctors/${doctorName}/Babies/${babyId}`));
+        }
+      };
+
+      babyList.appendChild(babyDiv);
+    });
+
+    contentDiv.appendChild(doctorCard);
+  });
+});
+document.getElementById('save-pdf-btn').addEventListener('click', () => {
+    const element = document.getElementById('content');
+    const now = new Date();
+    
+    // Format the date/time for Kuwait (AST)
+    const timestamp = now.toLocaleDateString('en-GB', {
+        day: 'numeric', month: 'long', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+    });
+
+    // 1. Create a Professional Header for the PDF
+    const pdfHeader = document.createElement("div");
+    pdfHeader.innerHTML = `
+        <div style="text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px;">
+            <h1 style="margin: 0; color: #1a237e;">Maternity Hospital</h1>
+            <p style="margin: 5px 0; font-weight: bold;">Point-of-Care Ultrasound (POCUS) - Vascular Access Department</p>
+            <p style="margin: 0; font-size: 12px; color: #555;">Official Diagnostic Summary Report</p>
+        </div>
+    `;
+    element.prepend(pdfHeader); // Add to the very top
+
+    // 2. Create the Footer Timestamp
+    const pdfFooter = document.createElement("div");
+    pdfFooter.innerHTML = `
+        <div style="text-align: center; font-size: 11px; color: #777; margin-top: 30px; border-top: 1px solid #ddd; padding-top: 10px;">
+            <p>Generated on: ${timestamp} | System: POCUS-Admin-v2.6</p>
+            <p><i>Note: This document is for clinical reference and should be filed in the Patient Medical Record.</i></p>
+        </div>
+    `;
+    element.appendChild(pdfFooter); // Add to the very bottom
+
+    // 3. UI Cleanup (Hide buttons and expand lists)
+    const allLists = document.querySelectorAll('.baby-list');
+    allLists.forEach(list => list.style.display = 'block');
+    const buttonsToHide = document.querySelectorAll('button, .home, .toggle-us');
+    buttonsToHide.forEach(btn => btn.style.display = 'none');
+
+    // 4. PDF Configuration
+    const opt = {
+        margin:       [15, 10, 15, 10], // top, left, bottom, right
+        filename:     `Vascular_Access_POCUS_Report_${now.toISOString().split('T')[0]}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    // 5. Save the PDF
+    html2pdf().set(opt).from(element).save().then(() => {
+        // 6. Clean up: Remove PDF-only elements and show buttons again
+        element.removeChild(pdfHeader);
+        element.removeChild(pdfFooter);
+        buttonsToHide.forEach(btn => btn.style.display = 'inline-block');
+        
+        // Ensure "Lung Ultrasound" button stays looking disabled
+        document.getElementById('disabled').style.display = 'inline-block';
+    });
+});
+</script>
+
+</body>
+</html>

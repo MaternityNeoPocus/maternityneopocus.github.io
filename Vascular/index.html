@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocus</title>
+    <link rel="icon" type="image/png" href="LogInAdmin/admin/icon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <img class="logo" src="../LogInAdmin/admin/logo.png.jpeg" alt="Logo" style="height: 60px; width: 60px; border-radius: 10px;">
+        <div>
+        <a class="admin-signup" href="../index.html">Back</a>
+        <a class="admin-signup" href="Query/query.html">Inquery</a>
+        </div>
+    </header>
+    
+    <form method="post" id="form">
+        <h1 class="lit">Register Baby of Vascular POCUS</h1>
+
+        <!-- Site of doctor -->
+        <label class="l">Doctor ID:</label>
+        <input id="doctorid" class="doctor" type="text" required><br><br>
+
+        <label class="l" for="username">Baby Name:</label>
+        <input id="babyname" class="babyname" type="name" value="B/O:  " required><br><br>
+
+        <label class="l" for="password">File Number Id:</label>
+        <input id="fileNumberId" class="fileNumberId" type="name" required><br><br>
+
+        <label class="l">Gestational Age:</label>
+        <input id="gestationalAge" class="gestational" type="number" required><br><br>
+
+        <!-- Site of baby -->
+        <label class="l">Site of baby:</label>
+        <select id="siteOfBaby" class="siteOfBaby" required>
+            <option value="" selected disabled>Select Site</option>
+            <option value="">New Hospital - NICU 1</option>
+            <option value="">New Hospital - NICU 2</option>
+            <option value="">New Hospital - HDU 1</option>
+            <option value="">New Hospital - HDU 2</option>
+            <option value="">New Hospital - PNW</option>
+            <option value="">Old Hospital - NICU</option>
+            <option value="">Old Hospital - SCU</option>
+            <option value="">Old Hospital - PNW</option>
+        </select><br><br>
+
+        <label class="l">Indication of scan:</label>
+        <input id="indicationOfscan" class="indicationOfscan" type="text" required><br><br>
+
+        <label class="l"> Findings:</label>
+        <textarea id="findings" class="findings" rows="4" cols="50" required></textarea><br><br>
+
+        <label class="l"> Notes:</label>
+        <textarea id="notes" class="notes" rows="4" cols="50" required></textarea><br><br>
+
+        <label class="l"> Date of Scan:</label>
+        <input id="dateOfscan" class="dateOfscan" type="date" required><br><br>
+
+
+
+
+        <input id="submit" class="lib" type="button" value="Submit">
+    </form>
+
+    <div id="loader" style="display:none;">
+        <div class="spinner"></div>
+        <p>Saving...</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 <a target="_blank" href="http://mangocompany.infinityfreeapp.com/?i=1#project">Mango Company</a>.
+            All rights reserved.</p>
+    </footer>
+
+    <script src="script.js" type="module"></script>
+    <script>
+        const input = document.getElementById("babyname");
+        const fixedText = "B/O: ";
+
+        input.addEventListener("input", () => {
+            if (!input.value.startsWith(fixedText)) {
+                input.value = fixedText;
+            }
+        });
+
+        input.addEventListener("keydown", (e) => {
+            if (
+                input.selectionStart <= fixedText.length &&
+                (e.key === "Backspace" || e.key === "Delete")
+            ) {
+                e.preventDefault();
+            }
+        });
+        input.setSelectionRange(fixedText.length, fixedText.length);
+
+    </script>
+
+</body>
+
+</html>
